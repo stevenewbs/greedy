@@ -1,0 +1,48 @@
+extends layout
+
+block content
+ div.container
+  h3 Add a new recipe
+  form.form-inline(method="POST")
+   div(class="form-group")
+    label(for="Name") Recipe Name
+    input(type="text" class="form-control" id="Name" name="Name" placeholder="Tomato Soup")
+   div(class="form-group")
+    label(for="Description") Description
+    input(type="text" class="form-control" id="Description" name="Description" placeholder="This is a yummy recipe")
+   div(class="form-group")
+    button(class="btn btn-primary" style="margin-left: 10px;") Add
+
+ br
+ div.container
+  div(class="panel-default panel")
+   div.panel-heading Recipes
+   div(class="panel-body")
+    table(class="table table-hover", data-bind="recipes")
+     thead
+      th(data-bind="Name") Recipe
+      th(data-bind="Description") Description
+      th(data-bind="Controls") Actions
+     tbody
+      tr
+
+ if error
+  div.jumbotron(class="error")
+   h4 Error
+   p= error
+   button.btn(onclick="closeJumbotron()") Close
+
+ script.
+  $( document ).ready(function () {
+   $.getJSON("/recipes/list").done(function (json) {
+    //alert("done");
+    PopulateTable(json, "recipes");
+    console.log("populating...");
+    //console.log(json);
+    AddManageButtons("recipes");
+    AddDeleteButtons("recipes", 2);
+   }).fail(function (jqxhr, textStatus, error) {
+    var error = textStatus + ": " + error;
+    alert(error);
+   });
+  });

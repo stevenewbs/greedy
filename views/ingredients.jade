@@ -1,0 +1,61 @@
+extends layout
+
+block content
+ div.container
+  h3 Add a new ingredient
+  h5 Examples:
+  p When I buy butter it comes in 500 Gram lumps  = Butter, Units = Gram, Size = 500.
+  p When I buy carrots I buy a bag of six = Carrots, Unit = item, Size = 1.
+  p When I use blueberries I use them a pack at a time = Blueberries, Unit = pack, Size = 1.
+
+  form.form-inline(method="POST")
+   div(class="form-group")
+    label(for="Name") Ingredient Name
+    input(type="text" class="form-control" id="Name" name="Name" placeholder="Beans")
+   div(class="form-group")
+    label(for="Units") Units
+    select.form-control(id="Units" name="Units")
+     each row in units.length ? units : ["No units found"]
+      option(value=row.ID)= row.Name
+   div(class="form-group")
+    label(for="Size") Size
+    input(type="number" class="form-control" id="Size" name="Size" placeholder="1-1000")
+   div(class="form-group")
+    label(for="Number") Number in stock
+    input(type="number" class="form-control" id="Number" name="Number" placeholder="1-100")
+   div(class="form-group")
+    button(class="btn btn-primary" style="margin-left: 10px;") Add
+
+ br
+ div.container
+  div(class="panel-default panel")
+   div.panel-heading Ingredients
+   div(class="panel-body")
+    table(class="table table-hover", data-bind="ingredients")
+     thead
+      th(data-bind="Name") Ingredient
+      th(data-bind="Units") Units
+      th(data-bind="Size") Size
+      th(data-bind="Controls") Actions
+     tbody
+      tr
+
+ if error
+  div.jumbotron(class="error")
+   h4 Error
+   p= error
+   button.btn(onclick="closeJumbotron()") Close
+
+ script.
+  $( document ).ready(function () {
+   $.getJSON("/ingredients/list").done(function (json) {
+    //alert("done");
+    PopulateTable(json, "ingredients");
+    console.log("populating...");
+    AddDeleteButtons("ingredients", 0);
+    //console.log(json);
+   }).fail(function (jqxhr, textStatus, error) {
+    var error = textStatus + ": " + error;
+    alert(error);
+   });
+  });

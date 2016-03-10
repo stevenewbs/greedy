@@ -1,0 +1,51 @@
+extends layout
+
+block content
+ a(href="/recipes") < Back to Recipes
+ div.container
+  h3= 'Add ingredients to ' + recipe
+  form.form-inline(method="POST")
+   div(class="form-group")
+    label(for="Ingredients") Select Ingredient
+    select.form-control(id="Ingredient" name="Ingredient")
+     each row in ingredients.length ? ingredients : ["No ingredients found"]
+      option(value=row.ID, data-unit=row.Units)= row.Name + " - " + row.Units + "(s)"
+   div(class="form-group")
+    label(for="Amount") Amount
+    input(type="number" class="form-control" id="Amount" name="Amount" placeholder="1-1000")
+   div(class="form-group")
+    button(class="btn btn-primary" style="margin-left: 10px;") Add
+
+ br
+ div.container
+  div(class="panel-default panel")
+   div.panel-heading Ingredients
+   div(class="panel-body")
+    table(class="table table-hover", data-bind="ingredients")
+     thead
+      th(data-bind="Name") Ingredient
+      th(data-bind="Quantity") Quantity
+      th(data-bind="Controls") Actions
+     tbody
+      tr
+
+ if error
+  div.jumbotron(class="error")
+   h4 Error
+   p= error
+   button.btn(onclick="closeJumbotron()") Close
+
+ script.
+  $( document ).ready(function () {
+   id = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
+   $.getJSON("/recipes/ingredients/list/" + id).done(function (json) {
+    //alert("done");
+    PopulateTable(json, "ingredients");
+    console.log("populating...");
+    AddDeleteButtons("ingredients", 1);
+    //console.log(json);
+   }).fail(function (jqxhr, textStatus, error) {
+    var error = textStatus + ": " + error;
+    alert(error);
+   });
+  });

@@ -1,0 +1,28 @@
+doctype html
+html
+ head
+  title= title
+  meta(charset="utf-8")
+  meta(http-equiv="X-UA-Compatible" content="IE=edge")
+  meta(name="viewport" content="width=device-width, initial-scale=1")
+  link(rel='stylesheet', href='/css/bootstrap.min.css')
+  link(rel='stylesheet', href='/stylesheets/style.css')
+  script(src='/js/jquery.min.js')
+ body
+  div.container
+   h1= title
+   p #{title} helps you manage recipes and ingredients
+   nav(class="navbar navbar-default")
+    div(class="container")
+     ul(class="nav navbar-nav")
+      li(class=(menu === 'home' ? "active" : ""))
+       a(href="/") Home
+      li(class=(menu === 'recipes' ? 'active' : ''))
+       a(href="/recipes") Recipes
+      li(class=(menu === 'ingredients' ? 'active' : ''))
+       a(href="/ingredients") Ingredients
+      li(class=(menu === 'list' ? 'active' : ''))
+       a(href="/lists") List
+
+   block content
+  script(src='/javascripts/main.js')

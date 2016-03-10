@@ -1,0 +1,35 @@
+extends layout
+
+block content
+ div.container
+  h3 Create a shopping list
+  p Select this week's recipes
+  each row in recipes.length ? recipes : ["No recipes found"]
+   button(class="btn recipe", style="margin-left: 10px;", data-id="#{row.ID}")= row.Name
+
+ br
+ div.container
+  div(class="panel-default panel")
+   div.panel-heading Ingredients to buy
+   div(class="panel-body")
+    table(class="table table-hover", data-bind="ingredients")
+     thead
+      th(data-bind="Name") Ingredient
+      th(data-bind="Quantity") Quantity to buy
+      th(data-bind="Controls") Actions
+     tbody
+      tr
+
+ if error
+  div.jumbotron(class="error")
+   h4 Error
+   p= error
+   button.btn(onclick="closeJumbotron()") Close
+
+ script.
+  $( document ).ready(function () {
+   $('button.recipe').each(function () {
+    var id = $(this).attr('data-id');
+    $(this).click({ id: id }, PopulateIngredients);
+   });
+  });
