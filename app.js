@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var sqlite3 = require('sqlite3').verbose();
 
+
 var indroute = require('./routes/index');
 var recroute = require('./routes/recipes');
 var ingroute = require('./routes/ingredients');
@@ -14,6 +15,16 @@ var listroute = require('./routes/shopping');
 
 var app = express();
 var db = new sqlite3.Database('data/greedy.db')
+
+function IsAuthed(req) {
+ var cookieuser = req.cookies.user;
+ if (cookieuser) {
+  //console.log("Authorised");
+  return true;
+ }
+ //console.log("NOT Authorised");
+ return false;
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -27,15 +38,29 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Make our db accessible to our router
-app.use(function(req,res,next){
+app.use(function(req, res, next){
  req.db = db;
  next();
 });
 
-app.use('/', indroute);
-app.use('/recipes', recroute);
-app.use('/ingredients', ingroute);
-app.use('/lists', listroute);
+// make a router middleware for authentication
+var auth = express.Router();
+
+auth.get('/', function(req, res, next) {
+ if (!IsAuthed(req)) {
+  if (req.originalUrl != '/login') {
+   res.redirect('/login');
+  }
+ }
+ else {
+  next();
+ }
+})
+
+app.use('/', auth, indroute);
+app.use('/recipes', auth, recroute);
+app.use('/ingredients', auth, ingroute);
+app.use('/lists', auth, listroute);
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
 app.use('/js', express.static(__dirname + '/node_modules/jquery/dist')); // redirect JS jQuery
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap

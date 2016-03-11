@@ -230,3 +230,7 @@ function PopulateIngredients(event) {
 		});
 	}
 }
+
+function closeJumbotron() {
+	$('.jumbotron').slideUp();
+}

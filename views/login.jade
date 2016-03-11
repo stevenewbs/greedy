@@ -1,0 +1,21 @@
+extends layout
+
+block content
+ div.container
+  h3 Login
+
+  form.form-inline(method="POST")
+   div(class="form-group")
+    label(for="Username") Username
+    input(type="text" class="form-control" id="Username" name="Username" placeholder="Username" value="#{ Username ? Username : ''}")
+   div(class="form-group")
+    label(for="Password") Password
+    input(type="password" class="form-control" id="Password" name="Password")
+   div(class="form-group")
+    button(class="btn btn-primary" style="margin-left: 10px;") Add
+
+ if error
+  div.jumbotron(class="error")
+   h4 Error
+   p= error
+   button(class="btn btn-primary" onclick="closeJumbotron()") Close
