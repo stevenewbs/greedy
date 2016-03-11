@@ -74,10 +74,10 @@ function PopulateShoppingList(jsonobj, location) {
 		var alreadythere = false;
 		$("tr[data-id='" + obj.ID + "']").each(function() {
 			var current = parseInt($(this).attr('data-quant'));
-			alert(current);
+			//alert(current);
 			var toadd = parseInt(obj.Amount);
 			var n  = current + toadd;
-			console.log(n);
+			//console.log(n);
 			$(this).attr('data-quant',n);
 			$(this).children().children('span[data-link="Quantity"]').text(n);
 			alreadythere = true;
@@ -120,17 +120,13 @@ function DePopulateShoppingList(jsonobj, location) {
 	for (num in Items) {
 		var obj = Items[num];
 		$("tr[data-id='" + obj.ID + "']").each(function() {
-			console.log(obj);
+			//console.log(obj);
 			var current = parseInt($(this).attr('data-quant'));
-			console.log(obj.Name + ": " + current);
 			var torem = parseInt(obj.Amount);
-			console.log(obj.Name + " needs to loose : " + torem)
 			var n  = current - torem;
-			console.log(obj.Name + ": " + n)
 			if (n <= 0) {
 				$(this).remove();
 			} else {
-				console.log(obj.Name + ": " + n);
 				$(this).attr('data-quant',n);
 				$(this).children().children('span[data-link="Quantity"]').text(n);
 			}
@@ -214,7 +210,7 @@ function PopulateIngredients(event) {
 	var button = $("button.recipe[data-id='" + id + "']");
 	if (button.hasClass("btn-success")) {
 		//turn it off
-		console.log("Removing recipe: " + id);
+		//console.log("Removing recipe: " + id);
 		button.removeClass("btn-success");
 		$.getJSON("/lists/adding/" + id).done(function (json) {
 			DePopulateShoppingList(json, "ingredients");
@@ -224,7 +220,7 @@ function PopulateIngredients(event) {
 		});
 	}
 	else {
-		console.log("Adding recipe: " + id);
+		//console.log("Adding recipe: " + id);
 		$("button.recipe[data-id='" + id + "']").addClass("btn-success");
 		$.getJSON("/lists/adding/" + id).done(function (json) {
 			PopulateShoppingList(json, "ingredients");
