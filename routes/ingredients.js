@@ -13,9 +13,13 @@ router.get('/list', function(req, res) {
 // delete an ingredient
 router.get('/delete/:ID', function(req, res) {
  var db = req.db;
- var collection = db.all('DELETE FROM Ingredient WHERE ID = ?', req.params.ID, function(err, results) {
+ var collection = db.run('DELETE FROM Ingredient WHERE ID = ?;', req.params.ID, function(err1, results1) {
+  collection = db.run('DELETE FROM RecipeMap WHERE IngredientID = ?;', req.params.ID, function(err2, results2) {
+   //console.log(results);
+   res.json(results2);
+  });
   //console.log(results);
-  res.json(results);
+  res.json(results1);
  });
 });
 
